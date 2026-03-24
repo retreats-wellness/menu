@@ -3,16 +3,24 @@
 import React, { useMemo, useRef } from "react";
 import ForceGraph2D from "react-force-graph-2d";
 
-export default function OriginKnowledgeGraph() {
-  const graphRef = useRef();
+type NodeType = {
+  id: string;
+  group: string;
+};
 
-  const data = useMemo(() => {
+type LinkType = {
+  source: string;
+  target: string;
+};
+
+export default function OriginKnowledgeGraph() {
+  const graphRef = useRef<any>(null);
+
+  const data = useMemo<{ nodes: NodeType[]; links: LinkType[] }>(() => {
     return {
       nodes: [
-        // CORE
         { id: "ORIGIN", group: "core" },
 
-        // TOP MENU (YELLOW LAYER = FIRST NAV LAYER)
         { id: "Home", group: "nav" },
         { id: "About", group: "nav" },
         { id: "Projects", group: "nav" },
@@ -20,7 +28,6 @@ export default function OriginKnowledgeGraph() {
         { id: "Engage", group: "nav" },
         { id: "Contact", group: "nav" },
 
-        // ABOUT
         { id: "Vision", group: "about" },
         { id: "Founders", group: "about" },
         { id: "Advisors", group: "about" },
@@ -41,7 +48,6 @@ export default function OriginKnowledgeGraph() {
         { id: "Hubcast International", group: "partners" },
         { id: "TreeGen", group: "partners" },
 
-        // PROJECTS
         { id: "Project Biome Regeneration", group: "project" },
         { id: "Cradle of Humankind", group: "project" },
         { id: "Earthdance Legacy", group: "project" },
@@ -50,7 +56,6 @@ export default function OriginKnowledgeGraph() {
         { id: "Global Consciousness Project", group: "project" },
         { id: "Global Coherence", group: "project" },
 
-        // KNOWLEDGE (FIXED - Glossary included)
         { id: "Knowledge Graph", group: "knowledge" },
         { id: "Glossary", group: "knowledge" },
         { id: "Science & Coherence", group: "knowledge" },
@@ -60,7 +65,6 @@ export default function OriginKnowledgeGraph() {
         { id: "Learning Materials", group: "knowledge" },
         { id: "Case Studies", group: "knowledge" },
 
-        // ENGAGE
         { id: "The Circle", group: "engage" },
         { id: "The Pillars", group: "engage" },
         { id: "Community Stories", group: "engage" },
@@ -68,7 +72,6 @@ export default function OriginKnowledgeGraph() {
       ],
 
       links: [
-        // CORE NAV
         { source: "ORIGIN", target: "Home" },
         { source: "ORIGIN", target: "About" },
         { source: "ORIGIN", target: "Projects" },
@@ -76,34 +79,27 @@ export default function OriginKnowledgeGraph() {
         { source: "ORIGIN", target: "Engage" },
         { source: "ORIGIN", target: "Contact" },
 
-        // ABOUT STRUCTURE
         { source: "About", target: "Vision" },
         { source: "About", target: "Founders" },
         { source: "About", target: "Advisors" },
         { source: "About", target: "Indigenous Elders" },
         { source: "About", target: "Partners" },
 
-        // PEOPLE
         { source: "Founders", target: "Dr. Zach Bush" },
         { source: "Founders", target: "Chris Deckker" },
         { source: "Advisors", target: "Peter Young" },
         { source: "Advisors", target: "Rebecca Irby" },
 
-        // ELDERS (FIXED + CONNECTED CORRECTLY)
         { source: "Indigenous Elders", target: "Ailton Krenak" },
         { source: "Indigenous Elders", target: "Thandiwe" },
         { source: "Indigenous Elders", target: "Nozipho" },
         { source: "Indigenous Elders", target: "Eric Terena" },
-
-        // FIX: Earthdance now correctly connected to Elders
         { source: "Indigenous Elders", target: "Earthdance Legacy" },
 
-        // PARTNERS
         { source: "Partners", target: "Project Biome" },
         { source: "Partners", target: "Hubcast International" },
         { source: "Partners", target: "TreeGen" },
 
-        // PROJECTS
         { source: "Projects", target: "Project Biome Regeneration" },
         { source: "Projects", target: "Cradle of Humankind" },
         { source: "Projects", target: "Earthdance Legacy" },
@@ -112,7 +108,6 @@ export default function OriginKnowledgeGraph() {
         { source: "Projects", target: "Global Consciousness Project" },
         { source: "Projects", target: "Global Coherence" },
 
-        // KNOWLEDGE (FIXED - Glossary included)
         { source: "Knowledge", target: "Knowledge Graph" },
         { source: "Knowledge", target: "Glossary" },
         { source: "Knowledge", target: "Science & Coherence" },
@@ -122,7 +117,6 @@ export default function OriginKnowledgeGraph() {
         { source: "Knowledge", target: "Learning Materials" },
         { source: "Knowledge", target: "Case Studies" },
 
-        // ENGAGE
         { source: "Engage", target: "The Circle" },
         { source: "Engage", target: "The Pillars" },
         { source: "Engage", target: "Community Stories" },
@@ -131,31 +125,26 @@ export default function OriginKnowledgeGraph() {
     };
   }, []);
 
-  const getColor = (group) => {
+  const getColor = (group: string) => {
     switch (group) {
       case "core":
         return "#111827";
-
-      // NAV LAYER = YELLOW (your request)
       case "nav":
         return "#EAB308";
-
-      // RAINBOW SYSTEM
       case "about":
-        return "#3B82F6"; // blue
+        return "#3B82F6";
       case "people":
-        return "#EF4444"; // red
+        return "#EF4444";
       case "elders":
-        return "#F97316"; // orange
+        return "#F97316";
       case "partners":
-        return "#22C55E"; // green
+        return "#22C55E";
       case "knowledge":
-        return "#A855F7"; // purple
+        return "#A855F7";
       case "project":
-        return "#14B8A6"; // teal
+        return "#14B8A6";
       case "engage":
-        return "#06B6D4"; // cyan
-
+        return "#06B6D4";
       default:
         return "#9CA3AF";
     }
@@ -168,12 +157,11 @@ export default function OriginKnowledgeGraph() {
         graphData={data}
         nodeLabel="id"
         linkColor={() => "#E5E7EB"}
-        nodeCanvasObject={(node, ctx, globalScale) => {
+        nodeCanvasObject={(node: any, ctx, globalScale) => {
           const label = node.id;
           const fontSize = 12 / globalScale;
 
           ctx.fillStyle = getColor(node.group);
-
           ctx.beginPath();
           ctx.arc(node.x, node.y, 6, 0, 2 * Math.PI, false);
           ctx.fill();
@@ -182,9 +170,9 @@ export default function OriginKnowledgeGraph() {
           ctx.fillStyle = "#111827";
           ctx.fillText(label, node.x + 8, node.y + 3);
         }}
-        onNodeClick={(node) => {
+        onNodeClick={(node: any) => {
           if (node.id === "ORIGIN") {
-            graphRef.current.zoomToFit(400);
+            graphRef.current?.zoomToFit(400);
           }
         }}
         cooldownTicks={100}
