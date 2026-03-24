@@ -1,7 +1,14 @@
 "use client";
 
+export const dynamic = "force-dynamic";
+
 import React, { useMemo, useRef } from "react";
-import ForceGraph2D from "react-force-graph-2d";
+import dynamicImport from "next/dynamic";
+
+const ForceGraph2D = dynamicImport(
+  () => import("react-force-graph-2d"),
+  { ssr: false }
+);
 
 type NodeType = {
   id: string;
